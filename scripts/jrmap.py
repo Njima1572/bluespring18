@@ -1,3 +1,4 @@
+import random
 import math
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -112,6 +113,15 @@ class JRMap:
 
         return station_names
 
+    def do_change_of_trains_gacha(self, station_name):
+        station_data = self.data_manager.get_station_data_from_name(station_name)
+        randomint = random.randint(0, station_data["line_cd"].size - 1) 
+        print(randomint)
+        
+        line_cd = station_data.values[randomint][5]
+
+        return self.data_manager.get_line_cd_to_line_name(line_cd)
+
 
 def main():
     jrm = JRMap()
@@ -120,7 +130,9 @@ def main():
     lat = 35.534129
     lon = 137.791698
 
-    print(jrm.get_nearest_station(lon, lat, 5))
+    # print(jrm.get_nearest_station(lon, lat, 5))
+    station_name = "川崎"
+    print(f"{station_name}: {jrm.do_change_of_trains_gacha(station_name)}")
 
 
 if __name__ == "__main__":

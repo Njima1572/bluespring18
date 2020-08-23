@@ -44,20 +44,6 @@ class DataManager:
         lines_df = self.get_lines()
         return lines_df.set_index('line_cd')['line_name_h'].to_dict()
 
-    def generate_station_to_station_df_line_group(self):
-        station_df = self.get_stations()
-        station_grouped = station_df.groupby("station_g_cd")
-
-        # Trying to get stations with multiple change of lines
-        size_station_df = station_grouped.size().reset_index().rename(columns={"station_g_cd": "station_g_cd", 0:"count"})
-        size_station_df = size_station_df.loc[size_station_df["count"] > 1]
-
-        # Trying to make a groupby of each stations with changes
-        stations_with_changes_df = station_df.loc[station_df["station_g_cd"].isin(size_station_df["station_g_cd"])]
-        stations_with_changes_groupby = stations_with_changes_df.groupby("station_g_cd")
-
-        return stations_with_changes_groupby.groups
-    
     def generate_station_g_cd_to_data_dict(self):
         station_df = self.get_stations()
         station_dict = {}
@@ -79,11 +65,23 @@ class DataManager:
 
         return station_cd_g_cd_dict
 
+    def get_line_cd_to_line_name(self, line_cd):
+        line_df = self.get_lines()
+        line_data = line_df.loc[line_df["line_cd"] == line_cd]
+        return line_data["line_name"]
+
+
     def get_station_name_from_g_cd(self, station_g_cd):
         g_cd_dict = self.generate_station_g_cd_to_data_dict()
         return g_cd_dict[station_g_cd][0]
 
+    def get_station_data_from_name(self, station_name):
+        station_df = self.get_stations()
+        lines = self.get_lines()
+        station_df = station_df.loc[station_df["line_cd"].isin(lines["line_cd"])]
+        station_data = station_df.loc[station_df["station_name"] == station_name]
 
+        return station_data
     
     def set_company_id(self, company_id):
         self.company_id = company_id
@@ -93,7 +91,7 @@ class DataManager:
 
 
 if __name__ == "__main__":
-    jr_company_id = 30
+    jr_company_id = -1
     dm = DataManager(jr_company_id)
     # print(dm.get_stations(jr_company_id))
     # print(dm.generate_line_cd_name_dict(jr_company_id))
@@ -103,5 +101,5 @@ if __name__ == "__main__":
     # print(dm.generate_station_g_cd_to_data_dict())
     # print(dm.get_joins_by_line_cd()[11342])
 
-
+    print(dm.get_station_data_from_name("豊田市"))
 
