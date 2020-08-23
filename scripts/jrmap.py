@@ -31,13 +31,27 @@ class JRMap:
 
     def visualize_map(self):
         station_g_cd_dict = self.data_manager.generate_station_g_cd_to_data_dict()
+        # TODO: Optimize this loop
+        # TODO: Add edges
         for node in self.graph.nodes:
+
             data = station_g_cd_dict[node]
             lon = float(data[7])
             lat = float(data[8])
-            plt.plot(lon, lat, color=(0, 0, 0))
+            plt.scatter(lon, lat, s=0.4)
 
         plt.show()
+
+    def filter_by_prefecture(self, pref_cd):
+        station_g_cd_dict = self.data_manager.generate_station_g_cd_to_data_dict()
+        pref_nodes = []
+        for node in self.graph.nodes:
+            data = station_g_cd_dict[node]
+            data_pref_cd = int(data[4])
+            if pref_cd == data_pref_cd:
+                pref_nodes.append(data)
+
+        return pref_nodes
 
 
 
