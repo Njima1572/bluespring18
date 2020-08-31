@@ -82,6 +82,14 @@ class DataManager:
         station_data = station_df.loc[station_df["station_name"] == station_name]
 
         return station_data
+
+    def get_station_data_from_g_cd(self, station_g_cd):
+        station_df = self.get_stations()
+        lines = self.get_lines()
+        station_df = station_df.loc[station_df["line_cd"].isin(lines["line_cd"])]
+        station_data = station_df.loc[station_df["station_g_cd"] == station_g_cd]
+
+        return station_data
     
     def set_company_id(self, company_id):
         self.company_id = company_id

@@ -6,7 +6,7 @@ import networkx as nx
 import numpy as np
 from data_manager import DataManager
 
-JRCODE = 11
+JRCODE = 0
 
 class JRMap:
     def __init__(self):
@@ -106,15 +106,27 @@ class JRMap:
         dist_sorted = sorted(station_dist_dict.items(), key=lambda x:x[1])
         
         station_names = []
+        station_g_cds = []
 
         for i in range(nums):
             station_g_cd = dist_sorted[i][0]
+            station_g_cds.append(station_g_cd)
             station_names.append(self.data_manager.get_station_name_from_g_cd(station_g_cd))
 
-        return station_names
+        return station_names, station_g_cds
 
     def do_change_of_trains_gacha(self, station_name):
         station_data = self.data_manager.get_station_data_from_name(station_name)
+        print(station_data)
+        randomint = random.randint(0, station_data["line_cd"].size - 1) 
+        print(randomint)
+        
+        line_cd = station_data.values[randomint][5]
+
+        return self.data_manager.get_line_cd_to_line_name(line_cd)
+
+    def do_change_of_trains_gacha_g_cd(self, station_g_cd):
+        station_data = self.data_manager.get_station_data_from_g_cd(station_g_cd)
         randomint = random.randint(0, station_data["line_cd"].size - 1) 
         print(randomint)
         
