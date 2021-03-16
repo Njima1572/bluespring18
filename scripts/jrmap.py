@@ -134,6 +134,15 @@ class JRMap:
 
         return self.data_manager.get_line_cd_to_line_name(line_cd)
 
+    def do_change_of_trains_gacha_g_cd(self, station_g_cd):
+        station_data = self.data_manager.get_station_data_from_g_cd(station_g_cd)
+        randomint = random.randint(0, station_data["line_cd"].size - 1) 
+        print(randomint)
+        
+        line_cd = station_data.values[randomint][5]
+
+        return self.data_manager.get_line_cd_to_line_name(line_cd)
+
 
 def main():
     jrm = JRMap()
